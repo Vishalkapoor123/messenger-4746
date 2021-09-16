@@ -6,7 +6,8 @@ import socketio
 from online_users import online_users
 
 basedir = os.path.dirname(os.path.realpath(__file__))
-sio = socketio.Server(async_mode=async_mode, logger=False)
+#Allowing all hosts to connect, change it as per the host on the client side
+sio = socketio.Server(async_mode=async_mode, logger=False,cors_allowed_origins="*")
 thread = None
 
 
