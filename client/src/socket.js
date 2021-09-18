@@ -5,7 +5,6 @@ import {
   removeOfflineUser,
   addOnlineUser,
 } from "./store/conversations";
-import { fetchConversations } from "./store/utils/thunkCreators";
 
 const socket = io(window.location.origin);
 
@@ -19,10 +18,8 @@ socket.on("connect", () => {
   socket.on("remove-offline-user", (id) => {
     store.dispatch(removeOfflineUser(id));
   });
-  //Incase of new message set new message and to update the UI fetch conversation
   socket.on("new-message", (data) => {
     store.dispatch(setNewMessage(data.message, data.sender));
-    store.dispatch(fetchConversations());
   });
 });
 
