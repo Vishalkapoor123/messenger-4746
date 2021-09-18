@@ -10,7 +10,7 @@ export const addMessageToStore = (state, payload) => {
     newConvo.latestMessageText = message.text;
     return [newConvo, ...state];
   }
-
+  //Return updated conversation, so as to get real-time updates
   return state.map((convo) => {
     if (convo.id === message.conversationId) {
       const convoCopy = { ...convo };
@@ -23,7 +23,6 @@ export const addMessageToStore = (state, payload) => {
   });
 };
 
-//Return updated conversation, so as to get real-time updates
 export const addOnlineUserToStore = (state, id) => {
   return state.map((convo) => {
     if (convo.otherUser.id === id) {
