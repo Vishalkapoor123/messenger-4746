@@ -78,3 +78,7 @@ export const addNewConvoToStore = (state, recipientId, message) => {
     }
   });
 };
+
+// export const setReadMessagesToStore = (state, conversationId) => {
+//   return 
+// }

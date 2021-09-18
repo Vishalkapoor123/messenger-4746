@@ -7,6 +7,7 @@ import {
   setSearchedUsers,
 } from "../conversations";
 import { gotUser, setFetchingStatus } from "../user";
+import {setReadStatus} from "../readStatus"
 
 axios.interceptors.request.use(async function (config) {
   const token = await localStorage.getItem("messenger-token");
@@ -93,9 +94,10 @@ const sendMessage = (data, body) => {
 
 // message format to send: {recipientId, text, conversationId}
 // conversationId will be set to null if its a brand new conversation
-export const postMessage = (body) => (dispatch) => {
+// Added async await so as to get message data first and then dispatch the actions
+export const postMessage = (body) => async(dispatch) => {
   try {
-    const data = saveMessage(body);
+    const data = await saveMessage(body);
 
     if (!body.conversationId) {
       dispatch(addConversation(body.recipientId, data.message));
@@ -115,5 +117,15 @@ export const searchUsers = (searchTerm) => async (dispatch) => {
     dispatch(setSearchedUsers(data));
   } catch (error) {
     console.error(error);
+  }
+};
+
+export const setMessagesToread = (conversationId) => async(dispatch) => {
+  try{
+    const {data} = await axios.post(`/api/conversations/read`, {conversationId:conversationId})
+    dispatch(setReadStatus(0))
+  }
+  catch(error){
+    console.error(error)
   }
 };
