@@ -23,6 +23,7 @@ export const addMessageToStore = (state, payload) => {
   });
 };
 
+//Return updated conversation, so as to get real-time updates
 export const addOnlineUserToStore = (state, id) => {
   return state.map((convo) => {
     if (convo.otherUser.id === id) {
