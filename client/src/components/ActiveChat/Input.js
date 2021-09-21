@@ -77,10 +77,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-const mapStateToProps = (state) => {
-  return {
-    activeConversation: state.activeConversation,
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Input);
+export default connect(null, mapDispatchToProps)(Input);
