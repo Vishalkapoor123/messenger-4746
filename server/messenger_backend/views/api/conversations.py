@@ -45,10 +45,8 @@ class Conversations(APIView):
                 unread_count = 0
                 #set unread messages count
                 for message in convo.messages.all():
-                    if(message.read == False):
+                    if(message.read == False and message.senderId != user_id ):
                         unread_count+=1
-                        if(message.senderId == user_id):
-                            unread_count -=1
 
                 convo_dict["unread_count"] = unread_count
                 # set properties for notification count and last message preview which will the lastest one
@@ -77,5 +75,32 @@ class Conversations(APIView):
                 conversations_response,
                 safe=False,
             )
+        except Exception as e:
+            return HttpResponse(status=500)
+
+class ReadMessages(APIView):
+    """expects {conversationId } in body"""
+
+    def put(self, request):
+        try:
+            user = get_user(request)
+
+            if user.is_anonymous:
+                return HttpResponse(status=401)
+            sender = user.id
+            body = request.data
+            conversation_id = body.get("conversationId")
+
+            conversation = Conversation.objects.filter(id=conversation_id).first()
+            messages = Message.objects.filter(conversation = conversation).exclude(senderId = sender)
+            #update read status for messages from the other user, thats why sender is excluded
+            messages.update(read = True)
+            unread_count = 0
+            #set unread messages count
+            for message in messages:
+              if(message.read == False and message.senderId != sender ):
+                unread_count+=1
+            conversationId = list(messages.values("conversation_id"))[0]["conversation_id"]
+            return JsonResponse({"conversation_id":conversationId, "unread_count":unread_count})
         except Exception as e:
             return HttpResponse(status=500)

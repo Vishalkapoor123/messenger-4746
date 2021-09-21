@@ -8,14 +8,25 @@ export const addMessageToStore = (state, payload) => {
       messages: [message],
     };
     newConvo.latestMessageText = message.text;
+    //for new convo unread_count have to be initiated to one
+    newConvo.unread_count = 1;
     return [newConvo, ...state];
   }
-
+  //Return updated conversation, so as to get real-time updates
   return state.map((convo) => {
     if (convo.id === message.conversationId) {
-      convo.messages.push(message);
-      convo.latestMessageText = message.text;
-      return convo;
+      const convoCopy = { ...convo };
+      convoCopy.messages.push(message);
+      convoCopy.latestMessageText = message.text;
+      //Increase unread count by one for every new message on the recipient side
+      if (convoCopy.otherUser.id == message.senderId) {
+        if (convoCopy.unread_count) {
+          convoCopy.unread_count += 1;
+        } else {
+          convoCopy.unread_count = 1;
+        }
+      }
+      return convoCopy;
     } else {
       return convo;
     }
@@ -69,16 +80,25 @@ export const addSearchedUsersToStore = (state, users) => {
 export const addNewConvoToStore = (state, recipientId, message) => {
   return state.map((convo) => {
     if (convo.otherUser.id === recipientId) {
-      convo.id = message.conversationId;
-      convo.messages.push(message);
-      convo.latestMessageText = message.text;
-      return convo;
+      const convoCopy = { ...convo };
+      convoCopy.id = message.conversationId;
+      convoCopy.messages.push(message);
+      convoCopy.latestMessageText = message.text;
+      return convoCopy;
     } else {
       return convo;
     }
   });
 };
 
-// export const setReadMessagesToStore = (state, conversationId) => {
-//   return 
-// }
+export const markReadInStore = (state, conversationId, unread_count) => {
+  return state.map((convo) => {
+    if (convo.id === conversationId) {
+      const newConvo = { ...convo };
+      newConvo.unread_count = unread_count;
+      return newConvo;
+    } else {
+      return convo;
+    }
+  });
+};

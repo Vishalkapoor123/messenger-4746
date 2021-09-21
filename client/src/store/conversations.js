@@ -3,7 +3,8 @@ import {
   addOnlineUserToStore,
   addSearchedUsersToStore,
   removeOfflineUserFromStore,
-  addMessageToStore
+  addMessageToStore,
+  markReadInStore,
 } from "./utils/reducerFunctions";
 
 // ACTIONS
@@ -15,9 +16,16 @@ const REMOVE_OFFLINE_USER = "REMOVE_OFFLINE_USER";
 const SET_SEARCHED_USERS = "SET_SEARCHED_USERS";
 const CLEAR_SEARCHED_USERS = "CLEAR_SEARCHED_USERS";
 const ADD_CONVERSATION = "ADD_CONVERSATION";
-// const SET_READ_COUNT = "SET_READ_COUNT"
-
+const MARK_READ = "MARK_READ";
 // ACTION CREATORS
+
+export const markRead = (conversationId, unread_count) => {
+  return {
+    type: MARK_READ,
+    conversationId,
+    unread_count,
+  };
+};
 
 export const gotConversations = (conversations) => {
   return {
@@ -68,18 +76,12 @@ export const addConversation = (recipientId, newMessage) => {
   };
 };
 
-//set read count to zero when opening  a chat
-// export const setReadCount = (conversationId) => {
-//   return {
-//     type: SET_READ_COUNT,
-//     payload: {conversationId},
-//   };
-// };
-
 // REDUCER
 
 const reducer = (state = [], action) => {
   switch (action.type) {
+    case MARK_READ:
+      return markReadInStore(state, action.conversationId, action.unread_count);
     case GET_CONVERSATIONS:
       return action.conversations;
     case SET_MESSAGE:
@@ -100,11 +102,6 @@ const reducer = (state = [], action) => {
         action.payload.recipientId,
         action.payload.newMessage
       );
-    // case SET_READ_COUNT:
-    //   return setReadMessagesToStore(
-    //     state,
-    //     action.conversationId
-    //   );
     default:
       return state;
   }

@@ -5,9 +5,9 @@ import {
   addConversation,
   setNewMessage,
   setSearchedUsers,
+  markRead,
 } from "../conversations";
 import { gotUser, setFetchingStatus } from "../user";
-import {setReadStatus} from "../readStatus"
 
 axios.interceptors.request.use(async function (config) {
   const token = await localStorage.getItem("messenger-token");
@@ -95,7 +95,7 @@ const sendMessage = (data, body) => {
 // message format to send: {recipientId, text, conversationId}
 // conversationId will be set to null if its a brand new conversation
 // Added async await so as to get message data first and then dispatch the actions
-export const postMessage = (body) => async(dispatch) => {
+export const postMessage = (body) => async (dispatch) => {
   try {
     const data = await saveMessage(body);
 
@@ -120,12 +120,14 @@ export const searchUsers = (searchTerm) => async (dispatch) => {
   }
 };
 
-export const setMessagesToread = (conversationId) => async(dispatch) => {
-  try{
-    const {data} = await axios.post(`/api/conversations/read`, {conversationId:conversationId})
-    dispatch(setReadStatus(0))
-  }
-  catch(error){
-    console.error(error)
+//Mark read for a particular user in a conversation
+export const setMessageToRead = (conversationId) => async (dispatch) => {
+  try {
+    const { data } = await axios.put(`/api/conversations/read`, {
+      conversationId,
+    });
+    dispatch(markRead(data.conversation_id, data.unread_count));
+  } catch (error) {
+    console.error(error);
   }
 };
