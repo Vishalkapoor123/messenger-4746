@@ -15,7 +15,7 @@ djangorestframework==3.12.4
 dnspython==1.16.0
 enum-compat==0.0.3
 eventlet==0.31.1
-greenlet==0.4.16
+greenlet==1.1.1
 idna==2.10
 monotonic==1.5
 mypy-extensions==0.4.3
