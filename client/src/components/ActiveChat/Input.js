@@ -29,7 +29,7 @@ const Input = (props) => {
   };
 
   //In case of active chat, mark read when starts typing in the input(onFocussing on the input box)
-  const handleClick = () => {
+  const handleFocus = () => {
     if (conversationId) {
       setMessageToRead(conversationId);
     }
@@ -59,7 +59,7 @@ const Input = (props) => {
           value={text}
           name="text"
           onChange={handleChange}
-          onFocus={handleClick}
+          onFocus={handleFocus}
         />
       </FormControl>
     </form>
