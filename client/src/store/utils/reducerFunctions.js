@@ -19,13 +19,7 @@ export const addMessageToStore = (state, payload) => {
       convoCopy.messages.push(message);
       convoCopy.latestMessageText = message.text;
       //Increase unread count by one for every new message on the recipient side
-      if (convoCopy.otherUser.id == message.senderId) {
-        if (convoCopy.unread_count) {
-          convoCopy.unread_count += 1;
-        } else {
-          convoCopy.unread_count = 1;
-        }
-      }
+      convoCopy.unreadCount += convoCopy.otherUser.id === message.senderId ? 1 : 0
       return convoCopy;
     } else {
       return convo;
