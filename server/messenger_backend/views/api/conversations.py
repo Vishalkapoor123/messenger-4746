@@ -43,6 +43,7 @@ class Conversations(APIView):
                 }
 
                 unread_count = 0
+                latestMessageRead = ""
                 #set unread messages count
                 for message in convo.messages.all():
                     if(message.read == False and message.senderId != user_id ):
