@@ -39,3 +39,13 @@ def logout(sid, user_id):
     if user_id in online_users:
         del online_users[user_id]
     sio.emit("remove-offline-user", user_id)
+
+#Returns latest message read by the user
+@sio.on("mark-read")
+def markRead(sid, conversationId, latestMessageRead, recipientId):
+    for user in online_users.keys():
+        if(user == recipientId):
+            recipient_sid = online_users[user]
+            sio.emit("mark-read", {"conversationId":conversationId,"latestMessageRead": latestMessageRead},
+            skip_sid = sid,
+            to = recipient_sid)

@@ -46,10 +46,10 @@ const Chat = (props) => {
         sidebar={true}
       />
       <ChatContent conversation={conversation} />
-      {conversation.unread_count > 0 && (
+      {conversation.unreadCount > 0 && (
         <Badge
           className={classes.badge}
-          badgeContent={conversation.unread_count}
+          badgeContent={conversation.unreadCount}
           color="primary"
         />
       )}

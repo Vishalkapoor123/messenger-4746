@@ -6,6 +6,7 @@ import {
   addMessageToStore,
   markReadInStore,
 } from "./utils/reducerFunctions";
+import store from ".";
 
 // ACTIONS
 
@@ -19,11 +20,10 @@ const ADD_CONVERSATION = "ADD_CONVERSATION";
 const MARK_READ = "MARK_READ";
 // ACTION CREATORS
 
-export const markRead = (conversationId, unread_count) => {
+export const markRead = (conversationId, latestMessageRead, recipientId) => {
   return {
     type: MARK_READ,
-    conversationId,
-    unread_count,
+    payload: { conversationId, latestMessageRead, recipientId },
   };
 };
 
@@ -37,7 +37,11 @@ export const gotConversations = (conversations) => {
 export const setNewMessage = (message, sender) => {
   return {
     type: SET_MESSAGE,
-    payload: { message, sender: sender || null },
+    payload: {
+      message,
+      sender: sender || null,
+      activeConversation: store.getState().activeConversation || null,
+    },
   };
 };
 
@@ -81,7 +85,7 @@ export const addConversation = (recipientId, newMessage) => {
 const reducer = (state = [], action) => {
   switch (action.type) {
     case MARK_READ:
-      return markReadInStore(state, action.conversationId, action.unread_count);
+      return markReadInStore(state, action.payload);
     case GET_CONVERSATIONS:
       return action.conversations;
     case SET_MESSAGE:

@@ -3,7 +3,6 @@ import { FormControl, FilledInput } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import { postMessage } from "../../store/utils/thunkCreators";
-import { setMessageToRead } from "../../store/utils/thunkCreators";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -21,18 +20,10 @@ const useStyles = makeStyles(() => ({
 const Input = (props) => {
   const classes = useStyles();
   const [text, setText] = useState("");
-  const { postMessage, otherUser, conversationId, user, setMessageToRead } =
-    props;
+  const { postMessage, otherUser, conversationId, user } = props;
 
   const handleChange = (event) => {
     setText(event.target.value);
-  };
-
-  //In case of active chat, mark read when starts typing in the input(onFocussing on the input box)
-  const handleFocus = () => {
-    if (conversationId) {
-      setMessageToRead(conversationId);
-    }
   };
 
   const handleSubmit = async (event) => {
@@ -59,7 +50,6 @@ const Input = (props) => {
           value={text}
           name="text"
           onChange={handleChange}
-          onFocus={handleFocus}
         />
       </FormControl>
     </form>
@@ -70,9 +60,6 @@ const mapDispatchToProps = (dispatch) => {
   return {
     postMessage: (message) => {
       dispatch(postMessage(message));
-    },
-    setMessageToRead: (conversationId) => {
-      dispatch(setMessageToRead(conversationId));
     },
   };
 };
