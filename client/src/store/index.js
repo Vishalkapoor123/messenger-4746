@@ -17,7 +17,7 @@ export const clearOnLogout = () => {
 const appReducer = combineReducers({
   user,
   conversations,
-  activeConversation
+  activeConversation,
 });
 const rootReducer = (state, action) => {
   if (action.type === CLEAR_ON_LOGOUT) {

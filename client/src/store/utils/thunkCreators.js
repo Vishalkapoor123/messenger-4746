@@ -5,6 +5,7 @@ import {
   addConversation,
   setNewMessage,
   setSearchedUsers,
+  markRead,
 } from "../conversations";
 import { gotUser, setFetchingStatus } from "../user";
 
@@ -114,6 +115,32 @@ export const searchUsers = (searchTerm) => async (dispatch) => {
   try {
     const { data } = await axios.get(`/api/users/${searchTerm}`);
     dispatch(setSearchedUsers(data));
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+//Emit an event to the recipient
+const sendLatestMessageRead = (data) => {
+  socket.emit(
+    "mark-read",
+    data.conversationId,
+    data.latestMessageRead,
+    data.recipientId
+  );
+};
+
+//Mark read for a particular user in a conversation
+export const setMessageToRead = (conversationId) => async (dispatch) => {
+  try {
+    const { data } = await axios.put(`/api/conversations/read`, {
+      conversationId,
+    });
+
+    dispatch(
+      markRead(data.conversationId, data.latestMessageRead, data.recipientId)
+    );
+    sendLatestMessageRead(data);
   } catch (error) {
     console.error(error);
   }
