@@ -7,22 +7,15 @@ from .user import User
 
 class Conversation(utils.CustomModel):
 
-    user1 = models.ForeignKey(
-        User, on_delete=models.CASCADE, db_column="user1Id", related_name="+"
-    )
-    user2 = models.ForeignKey(
-        User, on_delete=models.CASCADE, db_column="user2Id", related_name="+", 
-    )
+    title = models.CharField(null=True, max_length=255)
+    members = models.ManyToManyField(User, db_column="members")
     createdAt = models.DateTimeField(auto_now_add=True, db_index=True)
     updatedAt = models.DateTimeField(auto_now=True)
 
-    # find conversation given two user Ids
-    def find_conversation(user1Id, user2Id):
+    # find conversation given id
+    def find_conversation(id):
         # return conversation or None if it doesn't exist
         try:
-            return Conversation.objects.get(
-                (Q(user1__id=user1Id) | Q(user1__id=user2Id)),
-                (Q(user2__id=user1Id) | Q(user2__id=user2Id)),
-            )
+            return Conversation.objects.get(Q(id=id))
         except Conversation.DoesNotExist:
             return None

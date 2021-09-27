@@ -26,16 +26,19 @@ def seed():
 
     santiago.save()
 
-    santiagoConvo = Conversation(user1=thomas, user2=santiago)
+    santiagoConvo = Conversation(title="test1")
     santiagoConvo.save()
+    santiagoConvo.members.add(santiago.id)
+    santiagoConvo.members.add(thomas.id)
+
 
     messages = Message(
-        conversation=santiagoConvo, senderId=santiago.id, text="Where are you from?"
+        conversation=santiagoConvo, senderId=santiago.id, text="Where are you from?", read=False
     )
     messages.save()
 
     messages = Message(
-        conversation=santiagoConvo, senderId=thomas.id, text="I'm from New York"
+        conversation=santiagoConvo, senderId=thomas.id, text="I'm from New York", read=False
     )
     messages.save()
 
@@ -43,6 +46,7 @@ def seed():
         conversation=santiagoConvo,
         senderId=santiago.id,
         text="Share photo of your city, please",
+        read=False
     )
     messages.save()
 
@@ -54,8 +58,11 @@ def seed():
     )
     chiumbo.save()
 
-    chiumboConvo = Conversation(user1=chiumbo, user2=thomas)
+    chiumboConvo = Conversation(title="test2")
     chiumboConvo.save()
+    chiumboConvo.members.add(santiago.id)
+    chiumboConvo.members.add(chiumbo.id)
+    
 
     messages = Message(
         conversation=chiumboConvo, senderId=chiumbo.id, text="Sure! What time?"
@@ -70,8 +77,10 @@ def seed():
     )
     hualing.save()
 
-    hualingConvo = Conversation(user1=hualing, user2=thomas)
+    hualingConvo = Conversation(title="test3")
     hualingConvo.save()
+    hualingConvo.members.add(chiumbo.id)
+    hualingConvo.members.add(hualing.id)
 
     for i in range(10):
         messages = Message(
